@@ -2,19 +2,36 @@
 
 This is an API with simple HTML frontend. The purpose of this project is to familiarize myself with Express API, CRUD, admin and normal users, security concepts and writing tests
 
+I will try not to use any AI generated code for this project, so expect some real human slop
 
-
-
-Technical implementation:
-- Security: Helmet, rate limiting, CORS
-- DB: MariaDB, Prisma ORM
+### Technical implementation:
+- Security: Helmet, rate limiting, CORS, CSRF
+- DB: MySQL, Prisma ORM
 - Swagger Docs
-- Tests
+- Jest for tests
 
-Scope:
+### Scope:
 - Login, register, password reset 
-- Normal user CRUD: Add records, edit their records
-- Admin CRUD: Delete users, add users, change password
+- Normal user CRUD: Add records, edit their records, delete records
+- Admin CRUD: Delete users, add users, change password, all normal user functions
 - Some external API feature (Email autosend, weather API, Spotify API)
 
+### Hosting:
+- Frontend: Netlify?
+- Backend: Railway
+- DB: Aivevn.io
+
 My Node version: `node -v` : `v22.12.0`
+
+Backend folder plan:
+```
+backend/
+ ├── prisma/
+ ├── src/
+ │    ├── controllers/
+ │    ├── routes/
+ │    ├── middleware/
+ │    ├── services/
+ │    ├── utils/
+ │    └── app.js
+```
