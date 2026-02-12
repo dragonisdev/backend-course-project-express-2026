@@ -33,12 +33,18 @@ Finally `SHOW TABLES`
 Backend folder plan:
 ```
 backend/
- ├── prisma/
- ├── src/
- │    ├── controllers/
- │    ├── routes/
- │    ├── middleware/
- │    ├── services/
- │    ├── utils/
- │    └── app.js
+├── src/                      # Your TypeScript source code
+│   ├── db/                   # Database logic
+│   │   ├── index.ts          # Connection pool and Drizzle instance
+│   │   └── schema.ts         # Table definitions (Users, etc.)
+│   ├── middleware/           # (Recommended) Auth and validation logic
+│   ├── routes/               # (Recommended) Express route definitions
+│   ├── app.ts                # Express app setup and middleware configuration
+│   └── server.ts
 ```
+
+Frontend folder plan:
+frontend/
+├──
+|
+|
