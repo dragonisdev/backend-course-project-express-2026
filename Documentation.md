@@ -17,8 +17,9 @@ Making folders:
 Installing the dependencies
 `npm install express dotenv bcrypt jsonwebtoken helmet cors express-rate-limit`
 
-Installing old prisma client for better support. I chose to use Prisma 6.x because it is a stable, well-documented ORM with mature tooling. 7.x rewrites the stuff apparently.
-`npm install prisma@6 @prisma/client@6`
+Install Drizzle and required MySQL dependencies:
+`npm install drizzle-orm mysql2`
+`npm install --save-dev drizzle-kit`
 
 Installing swagger
 `npm install swagger-jsdoc swagger-ui-express`
@@ -26,50 +27,64 @@ Installing swagger
 Dev dependencies (for testing):
 `npm install --save-dev jest supertest nodemon`
 
-Setting up prisma with remote MySQL server
-`npx prisma init`
-
 Replace the right database URL in dotenv file that prisma generates:
 `DATABASE_URL` = `your_url`
 
-Replace schema.prisma
+Create `drizzle.config.ts`
+
 ```
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
+import type { Config } from "drizzle-kit";
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-enum UserRole {
-  USER
-  ADMIN
-  MODERATOR
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255) // Stores bcrypt hash (60 chars, but 255 for future-proofing)
-  name      String?  @db.VarChar(100)
-  role      UserRole @default(USER)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@index([email])
-  @@map("users") // Maps to 'users' table in database
-}
+export default {
+  schema: "./src/db/schema.ts",
+  out: "./drizzle",
+  dialect: "mysql",
+  dbCredentials: {
+    url: process.env.DATABASE_URL!,
+  },
+} satisfies Config;
 ```
 
-We will test our connection by pushing our schema
-`npx prisma db push`
+Replace `src/db/indx.ts` 
+```
+import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/mysql2";
+import dotenv from "dotenv";
 
-After first verification we will do `npx prisma migrate dev --name` to track changes
+dotenv.config();
 
-Generate prisma client in the backend which we will use for interacting with the db instead of raw queries
-`npx prisma generate`
+const pool = mysql.createPool({
+  uri: process.env.DATABASE_URL!,
+});
 
+export const db = drizzle(pool);
+```
+
+Define database schema `src/db/schema.ts`
+```
+import { mysqlTable, int, varchar, boolean, datetime, mysqlEnum } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
+
+export const userRoleEnum = mysqlEnum("user_role", ["USER", "ADMIN", "MODERATOR"]);
+
+export const users = mysqlTable("users", {
+  id: int("id").primaryKey().autoincrement(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  password: varchar("password", { length: 255 }).notNull(),
+  name: varchar("name", { length: 100 }),
+  role: userRoleEnum("role").default("USER").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: datetime("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updatedAt: datetime("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+```
+
+Generate migration files
+`npx drizzle-kit generate`
+
+Push to database
+`npx drizzle-kit push`
 
