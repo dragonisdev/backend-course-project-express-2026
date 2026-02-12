@@ -27,25 +27,25 @@ Installing swagger
 Dev dependencies (for testing):
 `npm install --save-dev jest supertest nodemon`
 
-Replace the right database URL in dotenv file that prisma generates:
+Replace the right database URL in dotenv file that drizzle generates:
 `DATABASE_URL` = `your_url`
 
 Create `drizzle.config.ts`
 
 ```
-import type { Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
 
-export default {
+export default defineConfig({
   schema: "./src/db/schema.ts",
   out: "./drizzle",
   dialect: "mysql",
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
-} satisfies Config;
+});
 ```
 
-Replace `src/db/indx.ts` 
+Replace `src/db/index.ts` 
 ```
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
@@ -85,6 +85,6 @@ export const users = mysqlTable("users", {
 Generate migration files
 `npx drizzle-kit generate`
 
-Push to database
-`npx drizzle-kit push`
+Migrate
+`npx drizzle-kit migrate`
 

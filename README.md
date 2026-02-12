@@ -23,6 +23,11 @@ I will try not to use any AI generated code for this project, so expect some rea
 
 My Node version: `node -v` : `v22.12.0`
 
+When wanting to interact in Aiven's web console, go to MySQL service on Aiven and connect, then input:
+`mysql -h <host> -P <port> -u <user> -p <database>`
+
+Finally `SHOW TABLES`
+
 Backend folder plan:
 ```
 backend/
