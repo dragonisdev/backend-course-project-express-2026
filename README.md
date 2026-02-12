@@ -4,6 +4,8 @@ This is an API with simple HTML frontend. The purpose of this project is to fami
 
 I will try not to use any AI generated code for this project, so expect some real human slop
 
+Refer to [`Documentation.md` for technical implementation guides](Documentation.md)
+
 ### Technical implementation:
 - Security: Helmet, rate limiting, CORS, CSRF
 - DB: MySQL, Prisma ORM
