@@ -50,7 +50,8 @@ AI generated docs to make this thing work (Claude Sonnet 4.5):
   "exclude": [
     "drizzle.config.ts",
     "node_modules",
-    "dist"
+    "dist",
+    "drizzle"
   ]
 }
 ```
@@ -67,6 +68,9 @@ Create `drizzle.config.ts` in root of backend folder
 
 ```
 import { defineConfig } from "drizzle-kit";
+import { config } from "dotenv";
+
+config();
 
 export default defineConfig({
   schema: "./src/db/schema.ts",
@@ -225,7 +229,7 @@ export default app;
 
 Create `src/server.ts` to start the server:
 ```
-import app from "./app";
+import app from "./app.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -236,6 +240,8 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 ```
+
+*Note: Using `.js` extension in import due to ES modules requirement. The actual file will be `app.ts` but TypeScript resolves it correctly.*
 
 Update `package.json` scripts:
 ```
