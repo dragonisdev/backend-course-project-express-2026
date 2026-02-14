@@ -8,7 +8,7 @@ Refer to [`Documentation.md` for technical implementation guides](Documentation.
 
 ### Technical implementation:
 - Security: Helmet, rate limiting, CORS, CSRF
-- DB: MySQL, Prisma ORM
+- DB: MySQL, Drizzle ORM
 - Swagger Docs
 - Jest for tests
 
@@ -27,6 +27,8 @@ My Node version: `node -v` : `v22.12.0`
 
 When wanting to interact in Aiven's web console, go to MySQL service on Aiven and connect, then input:
 `mysql -h <host> -P <port> -u <user> -p <database>`
+
+Or use DBeaver and input Aiven DB credentials
 
 Finally `SHOW TABLES`
 
